@@ -37,12 +37,12 @@ function createTiles(clues, type) {
   return tiles;
 }
 /**
- * Returns number of "revealed" tiles whose type matches team.
+ * Returns number of tiles remaining for team to find.
  * @param {Array} tiles Array of board's tile objects.
  * @param {String} team A string indicating tile type. Should be "blue" or "red".
  */
-function getScore(tiles, team) {
-  return tiles.filter((tile) => tile.revealed && tile.type === team).length;
+function getRemainingTiles(tiles, team) {
+  return tiles.filter((tile) => !tile.revealed && tile.type === team).length;
 }
 
 /**
@@ -84,11 +84,10 @@ game.put("/:roomID", async (ctx, next) => {
   }
 
   // check if winner
-
-  const redScore = getScore(tiles, "red");
-  const blueScore = getScore(tiles, "blue");
-  if (!redScore || !blueScore) {
-    newGame.winner = redScore === 0 ? "red" : "blue";
+  const redRemaining = getRemainingTiles(tiles, "red");
+  const blueRemaining = getRemainingTiles(tiles, "blue");
+  if (!redRemaining || !blueRemaining) {
+    newGame.winner = redRemaining === 0 ? "red" : "blue";
     drone.publish({
       room: `observable-${roomID}`,
       message: newGame,
