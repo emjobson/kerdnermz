@@ -59,11 +59,11 @@ function getScore(tiles, team) {
 game.put("/:roomID", async (ctx, next) => {
   const { roomID } = ctx.params;
   const { game, idx } = ctx.request.body;
-  const { tiles, currentTurn } = game;
+  const { tiles, currentTurn, winner } = game;
   const currentOpponent = currentTurn === "blue" ? "red" : "blue";
 
-  // ignore already clicked
-  if (tiles[idx].revealed) {
+  // ignore already clicked or game finished
+  if (tiles[idx].revealed || winner) {
     ctx.ok();
     await next();
     return;
