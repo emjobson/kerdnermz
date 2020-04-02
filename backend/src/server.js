@@ -2,13 +2,17 @@ const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const respond = require("koa-respond");
+const cors = require("@koa/cors");
 const router = require("./routes");
 
-const PORT = 5000;
+require("dotenv").config();
+
+const { PORT } = process.env;
 
 const app = new Koa();
 
 app
+  .use(cors())
   .use(logger())
   .use(respond())
   .use(bodyParser())

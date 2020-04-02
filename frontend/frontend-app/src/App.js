@@ -1,25 +1,16 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { BrowserRouter, Route } from "react-router-dom";
+import { Welcome } from "./Containers/Welcome";
+import { Game } from "./Containers/Game";
 
 function App() {
+  const drone = new window.Scaledrone(process.env.REACT_APP_SCALEDRONE);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Route exact path="/" component={Welcome} />
+      <Route path="/:roomID" render={() => <Game drone={drone} />} />
+    </BrowserRouter>
   );
 }
 
