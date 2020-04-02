@@ -1,6 +1,11 @@
 const Router = require("koa-router");
+const Scaledrone = require("scaledrone-node");
+require("dotenv").config();
+
+const { SCALEDRONE_CHANNEL_ID } = process.env;
 
 const router = new Router();
+const drone = new Scaledrone(SCALEDRONE_CHANNEL_ID);
 
 router.get("/", async (ctx, next) => {
   ctx.ok("hello world");
@@ -38,7 +43,8 @@ function createTiles(clues, type) {
   return tiles;
 }
 
-router.get("/new-game", async (ctx, next) => {
+router.get("/new-game/:roomID", async (ctx, next) => {
+  const { roomID } = ctx.params;
   // TODO(regina): Create constants for number of cards per type.
   const numBlueCards = 3;
   const numRedCards = numBlueCards - 1;
@@ -60,7 +66,13 @@ router.get("/new-game", async (ctx, next) => {
     currentTurn: "blue",
     winner: "",
   };
-  ctx.ok(newGame);
+
+  drone.publish({
+    room: `observable-${roomID}`,
+    message: newGame,
+  });
+
+  ctx.ok();
   await next();
 });
 
