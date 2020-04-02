@@ -27,16 +27,14 @@ function shuffle(a) {
 /**
  * Returns an array of board tiles with the given type.
  * @param {Array} clues An array of clue words to display on the tiles.
- * @param {Array} randomizedClueIndices An array of randomly ordered indices for
- * the clues array.
  * @param {String} type A string indicating tile type. Should be "blue," "red,"
  * "death," or "neutral."
  */
-function createTiles(clues, randomizedClueIndices, type) {
+function createTiles(clues, type) {
   const tiles = [];
-  randomizedClueIndices.forEach((clueIndex) => {
+  clues.forEach((clue) => {
     tiles.push({
-      clue: clues[clueIndex],
+      clue,
       type,
       revealed: false,
     });
@@ -53,23 +51,15 @@ router.get("/new-game/:roomID", async (ctx, next) => {
 
   // TODO(regina): Get actual clues.
   const clues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  const randomizedClueIndices = Array.from(Array(clues.length).keys());
-  shuffle(randomizedClueIndices);
+  shuffle(clues);
 
-  // We add tiles in order of blue, red, death, and then the remaining clues are
-  // added as neutral. Because the order of the clues we add have been
-  // randomized, the tile types are also randomized across the board.
+  // Set up tiles.
   let tiles = [];
-  tiles = tiles.concat(
-    createTiles(clues, randomizedClueIndices.splice(0, numBlueCards), "blue")
-  );
-  tiles = tiles.concat(
-    createTiles(clues, randomizedClueIndices.splice(0, numRedCards), "red")
-  );
-  tiles = tiles.concat(
-    createTiles(clues, randomizedClueIndices.splice(0, 1), "death")
-  );
-  tiles = tiles.concat(createTiles(clues, randomizedClueIndices, "neutral"));
+  tiles = tiles.concat(createTiles(clues.splice(0, numBlueCards), "blue"));
+  tiles = tiles.concat(createTiles(clues.splice(0, numRedCards), "red"));
+  tiles = tiles.concat(createTiles(clues.splice(0, 1), "death"));
+  tiles = tiles.concat(createTiles(clues, "neutral"));
+  shuffle(tiles);
 
   // TODO(regina): Create constants for tile types and teams.
   const newGame = {
