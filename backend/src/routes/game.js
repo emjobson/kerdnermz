@@ -41,7 +41,7 @@ function createTiles(clues, type) {
  * @param {Array} tiles Array of board's tile objects.
  * @param {String} team A string indicating tile type. Should be "blue" or "red".
  */
-function getRemainingTiles(tiles, team) {
+function getNumRemainingTiles(tiles, team) {
   return tiles.filter((tile) => !tile.revealed && tile.type === team).length;
 }
 
@@ -84,8 +84,8 @@ game.put("/:roomID", async (ctx, next) => {
   }
 
   // check if winner
-  const redRemaining = getRemainingTiles(tiles, "red");
-  const blueRemaining = getRemainingTiles(tiles, "blue");
+  const redRemaining = getNumRemainingTiles(tiles, "red");
+  const blueRemaining = getNumRemainingTiles(tiles, "blue");
   if (!redRemaining || !blueRemaining) {
     newGame.winner = redRemaining === 0 ? "red" : "blue";
     drone.publish({
