@@ -45,6 +45,17 @@ function getScore(tiles, team) {
   return tiles.filter((tile) => tile.revealed && tile.type === team).length;
 }
 
+/**
+ * Updates game state according to clicked tile, and publishes result to Scaledrone room.
+ * If already clicked, ignore. If death clicked, declare winner.
+ * Otherwise, update clicked tile, turn, and winner as necessary.
+ * @request_params
+ *   @param {String} roomID id of game in progress (without "observable" prefix)
+ *
+ * @request_body
+ *   @param {Object} game state object with keys: "tiles," "currentTurn," and "winner"
+ *   @param {Number} idx index of clicked tile in game.tiles
+ */
 game.put("/:roomID", async (ctx, next) => {
   const { roomID } = ctx.params;
   const { game, idx } = ctx.request.body;
