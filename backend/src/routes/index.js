@@ -51,6 +51,7 @@ router.get("/new-game/:roomID", async (ctx, next) => {
 
   // TODO(regina): Get actual clues.
   const clues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  shuffle(clues);
 
   // Set up tiles.
   let tiles = [];
