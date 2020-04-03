@@ -6,20 +6,16 @@ const { SCALEDRONE_CHANNEL_ID } = process.env;
 const drone = new Scaledrone(SCALEDRONE_CHANNEL_ID);
 const wordBankRouter = new Router();
 
-wordBankRouter.get("/", async (ctx, next) => {
-  ctx.ok("word bank");
-  await next();
-});
-
 /**
  * Adds the given word, if eligible, to the room's word bank.
  * @request_params
  *   @param {String} roomID id of game in progress (without "observable" prefix)
  *
  * @request_body
+ *   @param {Object} roomState  object with keys: "game," "wordBank," and "page"
  *   @param {String} newWord new word to add to the current word bank
  */
-game.put("/:roomID", async (ctx, next) => {
+wordBankRouter.put("/:roomID", async (ctx, next) => {
   const { roomID } = ctx.params;
   const {
     roomState,
