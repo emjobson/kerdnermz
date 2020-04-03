@@ -86,7 +86,7 @@ game.put("/:roomID", async (ctx, next) => {
   // check if winner
   const redRemaining = getNumRemainingTiles(tiles, "red");
   const blueRemaining = getNumRemainingTiles(tiles, "blue");
-  if (redRemaining == 0 || blueRemaining == 0) {
+  if (redRemaining === 0 || blueRemaining === 0) {
     newGame.winner = redRemaining === 0 ? "red" : "blue";
     drone.publish({
       room: `observable-${roomID}`,
