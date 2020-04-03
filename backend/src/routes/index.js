@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const { SCALEDRONE_CHANNEL_ID } = process.env;
 
-const { game, sheffle, createTiles } = require("./game");
+const { game, shuffle, createTiles } = require("./game");
 
 const router = new Router();
 const drone = new Scaledrone(SCALEDRONE_CHANNEL_ID);
@@ -25,7 +25,7 @@ router.get("/:roomID", async (ctx, next) => {
 
   // TODO(regina): Get actual clues.
   const clues = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
-  sheffle(clues);
+  shuffle(clues);
 
   // Set up tiles.
   let tiles = [];
@@ -33,7 +33,7 @@ router.get("/:roomID", async (ctx, next) => {
   tiles = tiles.concat(createTiles(clues.splice(0, numRedCards), "red"));
   tiles = tiles.concat(createTiles(clues.splice(0, 1), "death"));
   tiles = tiles.concat(createTiles(clues, "neutral"));
-  sheffle(tiles);
+  shuffle(tiles);
 
   // TODO(regina): Create constants for tile types and teams.
   const newGame = {

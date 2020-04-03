@@ -10,7 +10,7 @@ const game = new Router();
  * Shuffles array in place. From https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array.
  * @param {Array} a An array containing the items.
  */
-function sheffle(a) {
+function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -53,12 +53,16 @@ function getNumRemainingTiles(tiles, team) {
  *   @param {String} roomID id of game in progress (without "observable" prefix)
  *
  * @request_body
- *   @param {Object} game state object with keys: "tiles," "currentTurn," and "winner"
+ *   @param {Object} roomState  object with keys: "game," "wordBank," and "page"
  *   @param {Number} idx index of clicked tile in game.tiles
  */
 game.put("/:roomID", async (ctx, next) => {
   const { roomID } = ctx.params;
-  const { game, idx } = ctx.request.body;
+  const {
+    roomState,
+    roomState: { game },
+    idx,
+  } = ctx.request.body;
   const { tiles, currentTurn, winner } = game;
   const currentOpponent = currentTurn === "blue" ? "red" : "blue";
 
@@ -76,7 +80,7 @@ game.put("/:roomID", async (ctx, next) => {
     newGame.winner = currentOpponent;
     drone.publish({
       room: `observable-${roomID}`,
-      message: newGame,
+      message: { ...roomState, game: newGame },
     });
     ctx.ok();
     await next();
@@ -90,7 +94,7 @@ game.put("/:roomID", async (ctx, next) => {
     newGame.winner = redRemaining === 0 ? "red" : "blue";
     drone.publish({
       room: `observable-${roomID}`,
-      message: newGame,
+      message: { ...roomState, game: newGame },
     });
     ctx.ok();
     await next();
@@ -104,10 +108,10 @@ game.put("/:roomID", async (ctx, next) => {
 
   drone.publish({
     room: `observable-${roomID}`,
-    message: newGame,
+    message: { ...roomState, game: newGame },
   });
   ctx.ok();
   await next();
 });
 
-module.exports = { game, sheffle, createTiles };
+module.exports = { game, shuffle, createTiles };
