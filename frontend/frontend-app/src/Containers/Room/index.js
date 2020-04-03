@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Game } from "./Game";
+import { WordBank } from "./WordBank";
 
-export const Game = ({ drone }) => {
+export const Room = ({ drone }) => {
   const { roomID } = useParams();
-  const [gameState, setGameState] = useState();
+  const [roomState, setRoomState] = useState();
 
   useEffect(() => {
     const room = drone.subscribe(`observable-${roomID}`, { historyCount: 1 });
 
     room.on("message", (msg) => {
-      setGameState(msg.data);
+      setRoomState(msg.data);
     });
 
     room.on("members", async (members) => {
@@ -22,7 +24,7 @@ export const Game = ({ drone }) => {
       } else {
         // only look if game in progress
         room.on("history_message", (msg) => {
-          setGameState(msg.data);
+          setRoomState(msg.data);
         });
       }
     });
@@ -32,14 +34,15 @@ export const Game = ({ drone }) => {
     };
   }, [drone, roomID]);
 
-  if (!gameState) {
+  if (!roomState) {
     return <div>Loading...</div>;
   }
+  // const { game, page, wordBank } = roomState;
+  const { game, page, wordBank } = roomState;
+  //  const page = "wordBank"; // TODO: revert
 
-  return (
-    <div>
-      <div>{`Room: ${roomID}`}</div>
-      <div>{`Board State: ${JSON.stringify(gameState)}`}</div>
-    </div>
-  );
+  if (page === "game") {
+    return <Game game={game} roomID={roomID} />;
+  }
+  return <WordBank wordBank={wordBank} />;
 };
