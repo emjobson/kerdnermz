@@ -15,7 +15,7 @@ export const Game = ({ drone }) => {
 
     room.on("members", async (members) => {
       if (members.length === 1) {
-        const res = await axios.get(`/game/${roomID}`);
+        const res = await axios.get(`/${roomID}`);
         if (res.status !== 200) {
           console.log("Failed request"); // TODO(elliott): display error message
         }
