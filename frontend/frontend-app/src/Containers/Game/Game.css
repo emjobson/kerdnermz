@@ -1,0 +1,40 @@
+.tile {
+  margin: 10px 0px;
+  text-align: center;
+}
+
+/* Tile types */
+.blue {
+  background-color: #bdcaff !important;
+}
+
+.red {
+  background-color: #ffa6a6 !important;
+}
+
+.neutral {
+    background-color: #fff9bd !important;
+}
+
+.death {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.blue-spymaster {
+  color: #145ce0;
+  font-weight: bold;
+}
+
+.red-spymaster {
+  color: #e01414;
+  font-weight: bold;
+}
+
+.neutral-spymaster {
+
+}
+
+.death-spymaster {
+  background-color: #b5b5b5 !important;
+}

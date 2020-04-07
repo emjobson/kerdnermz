@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Board from "./Game";
 
 export const Game = ({ drone }) => {
   const { roomID } = useParams();
@@ -40,6 +41,8 @@ export const Game = ({ drone }) => {
     <div>
       <div>{`Room: ${roomID}`}</div>
       <div>{`Board State: ${JSON.stringify(gameState)}`}</div>
+
+      <Board game={gameState.game} />
     </div>
   );
 };
