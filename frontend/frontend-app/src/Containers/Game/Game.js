@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import "./Game.css";
 
 /**
@@ -15,7 +15,7 @@ class Tile extends Component {
     if (revealed) {
       className = type;
     } else if (isSpymasterView) {
-      className = `${type}-spymaster`;
+      className = `${type}-bold`;
     }
 
     return (
@@ -42,13 +42,50 @@ class Board extends Component {
     };
   }
 
-  // When an eligible tile is clicked, sends a request to the server to get an
-  // updated board.
-  handleTileClick(revealed, isSpymasterView, idx) {
-    if (revealed || isSpymasterView) return;
+  endCurrentTurn() {
+    // TODO(regina): Send request to server to switch turns.
+    console.log("end current turn");
+  }
 
-    // TODO(regina): Send move to server and retrieve updated board.
-    console.log(idx);
+  renderGameInfo(tiles, currentTurn) {
+    const numRemainingBlue = tiles.filter(
+      (tile) => !tile.revealed && tile.type === "blue"
+    ).length;
+    const numRemainingRed = tiles.filter(
+      (tile) => !tile.revealed && tile.type === "red"
+    ).length;
+
+    return (
+      <Row>
+        <Col>
+          <div>
+            <span className="blue-bold">{numRemainingBlue}</span> -
+{" "}
+            <span className="red-bold">{numRemainingRed}</span>
+          </div>
+        </Col>
+
+        <Col>
+          <div
+            className={`${currentTurn}-bold`}
+            style={{ textAlign: "center" }}
+          >
+            {`${currentTurn}'s turn`}
+          </div>
+        </Col>
+
+        <Col>
+          <div style={{ textAlign: "right" }}>
+            <Button variant="light" onClick={() => this.endCurrentTurn()}>
+              End
+              {` ${currentTurn}'s `}
+{' '}
+turn
+</Button>
+          </div>
+        </Col>
+      </Row>
+    );
   }
 
   // Changes between player view (all plain tiles) and spymaster view (different
@@ -57,6 +94,15 @@ class Board extends Component {
     this.setState((state) => {
       return { ...state, isSpymasterView: !state.isSpymasterView };
     });
+  }
+
+  // When an eligible tile is clicked, sends a request to the server to get an
+  // updated board.
+  handleTileClick(revealed, isSpymasterView, idx) {
+    if (revealed || isSpymasterView) return;
+
+    // TODO(regina): Send move to server and retrieve updated board.
+    console.log(idx);
   }
 
   renderTile(tile, idx) {
@@ -71,8 +117,7 @@ class Board extends Component {
     );
   }
 
-  renderTiles() {
-    const { tiles } = this.props.game;
+  renderTiles(tiles) {
     const MAX_TILES_PER_ROW = 5;
 
     return (
@@ -87,9 +132,12 @@ class Board extends Component {
   }
 
   render() {
+    const { tiles, currentTurn } = this.props.game;
+
     return (
       <Container>
-        <div>{this.renderTiles()}</div>
+        {this.renderGameInfo(tiles, currentTurn)}
+        {this.renderTiles(tiles)}
 
         <div className="custom-control custom-switch">
           <input

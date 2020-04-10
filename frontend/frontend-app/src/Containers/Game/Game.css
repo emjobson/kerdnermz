@@ -4,29 +4,29 @@
 }
 
 /* Tile types */
-.blue {
+.blue-tile {
   background-color: #bdcaff !important;
 }
 
-.red {
+.red-tile {
   background-color: #ffa6a6 !important;
 }
 
-.neutral {
+.neutral-tile {
     background-color: #fff9bd !important;
 }
 
-.death {
+.death-tile {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
 
-.blue-spymaster {
+.blue-bold {
   color: #145ce0;
   font-weight: bold;
 }
 
-.red-spymaster {
+.red-bold {
   color: #e01414;
   font-weight: bold;
 }
