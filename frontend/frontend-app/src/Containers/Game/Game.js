@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Col,
+  Container,
+  Dropdown,
+  Row,
+} from "react-bootstrap";
 import "./Game.css";
 
 /**
@@ -59,8 +67,7 @@ class Board extends Component {
       <Row>
         <Col>
           <div>
-            <span className="blue-bold">{numRemainingBlue}</span> -
-{" "}
+            <span className="blue-bold">{numRemainingBlue}</span> -{" "}
             <span className="red-bold">{numRemainingRed}</span>
           </div>
         </Col>
@@ -94,6 +101,59 @@ turn
     this.setState((state) => {
       return { ...state, isSpymasterView: !state.isSpymasterView };
     });
+  }
+
+  // When starting a new game, players have the option to choose clues from the
+  // default set of words or from their custom word bank (if available).
+  renderNewGameButton() {
+    return (
+      <Dropdown>
+        <Dropdown.Toggle variant="light" id="dropdown-basic">
+          New game
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item href="#/action-1">Default clues</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">Custom clues</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  }
+
+  // Renders buttons to:
+  //    1. Toggle spymaster view
+  //    2. Start new game
+  //    3. Go to word bank management page
+  renderGameControls() {
+    return (
+      <Row>
+        <Col>
+          <div className="custom-control custom-switch">
+            <input
+              type="checkbox"
+              className="custom-control-input"
+              id="spymasterViewSwitch"
+              checked={this.state.isSpymasterView}
+              onChange={() => this.toggleSpymasterView()}
+            />
+            <label
+              className="custom-control-label"
+              htmlFor="spymasterViewSwitch"
+            >
+              Spymaster View
+            </label>
+          </div>
+        </Col>
+        <Col>
+          <div style={{ textAlign: "right" }}>
+            <ButtonGroup className="justify-content-between">
+              {this.renderNewGameButton()}{" "}
+              <Button variant="light">Edit word bank</Button>
+            </ButtonGroup>
+          </div>
+        </Col>
+      </Row>
+    );
   }
 
   // When an eligible tile is clicked, sends a request to the server to get an
@@ -139,18 +199,7 @@ turn
         {this.renderGameInfo(tiles, currentTurn)}
         {this.renderTiles(tiles)}
 
-        <div className="custom-control custom-switch">
-          <input
-            type="checkbox"
-            className="custom-control-input"
-            id="spymasterViewSwitch"
-            checked={this.state.isSpymasterView}
-            onChange={() => this.toggleSpymasterView()}
-          />
-          <label className="custom-control-label" htmlFor="spymasterViewSwitch">
-            Spymaster View
-          </label>
-        </div>
+        {this.renderGameControls()}
       </Container>
     );
   }
