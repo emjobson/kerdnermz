@@ -15,21 +15,31 @@ import "./Game.css";
  * indicate the tile type (blue, red, death, or neutral).
  */
 class Tile extends Component {
+  getClassName(revealed, isSpymasterView, type) {
+    if (revealed) {
+      return type;
+    }
+    if (isSpymasterView) {
+      if (type === "death") {
+        return "death-spymaster";
+      }
+      return `${type}-bold`;
+    }
+    return "";
+  }
+
   render() {
     const { tile, idx, isSpymasterView, handleTileClick } = this.props;
     const { clue, type, revealed } = tile;
 
-    let className = "";
-    if (revealed) {
-      className = type;
-    } else if (isSpymasterView) {
-      className = `${type}-bold`;
-    }
-
     return (
       <Col>
         <Card
-          className={`tile ${className}`}
+          className={`tile ${this.getClassName(
+            revealed,
+            isSpymasterView,
+            type
+          )}`}
           onClick={() => handleTileClick(revealed, isSpymasterView, idx)}
         >
           <Card.Body>{clue}</Card.Body>
